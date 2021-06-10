@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 16 17:40:41 2021
+
+@author: shubham jain
+"""
+import face_recognition
+import cv2
+import os
+cnt=0
+print("You are under surveillance! please wait till I recognize you")
+camera = cv2.VideoCapture(0)
+return_value, image = camera.read()
+cv2.imwrite('opencv'+'.png', image)
+del(camera)
+unknown_image = face_recognition.load_image_file("opencv.png")
+images = os.listdir('images')
+image_to_be_matched = face_recognition.load_image_file('opencv.png')
+image_to_be_matched_encoded = face_recognition.face_encodings(image_to_be_matched)[0]
+for image in images:
+    current_image = face_recognition.load_image_file("images/" + image)
+    current_image_encoded = face_recognition.face_encodings(current_image)[0]
+    result = face_recognition.compare_faces(
+        [image_to_be_matched_encoded], current_image_encoded)
+    if result[0] == True:
+        cnt=1
+        print("Matched with",image)
+        
+if cnt==0:
+     print("NOT MATCHED with any of given data")
